@@ -23,20 +23,20 @@ This is a simple order management application written in Java, using JDK 11. It 
 1. **Clone the Repository**:
 
     ```bash
-    git clone https://github.com/yourusername/order-application.git
+    git clone https://github.com/andreytikholoz/order-app
     ```
 
 2. **Build the Project**:
 
     ```bash
-    cd order-application
+    cd order-app
     mvn clean install
     ```
 
 3. **Run the Application**:
 
     ```bash
-    java -jar target/order-application.jar
+    java -jar target/order-app.jar
     ```
 
    The application will start at `http://localhost:8080`.

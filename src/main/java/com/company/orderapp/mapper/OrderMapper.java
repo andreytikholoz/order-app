@@ -3,16 +3,16 @@ package com.company.orderapp.mapper;
 import com.company.orderapp.entity.OrderDTO;
 import com.company.orderapp.entity.OrderEntity;
 import com.company.orderapp.entity.OrderedProductEntity;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@AllArgsConstructor
 public class OrderMapper {
 
-    @Autowired
-    OrderedProductMapper orderedProductMapper;
+    private OrderedProductMapper orderedProductMapper;
 
     public OrderDTO map(OrderEntity orderEntity, List<OrderedProductEntity> orderedProductEntityList) {
         OrderDTO orderDTO = new OrderDTO();

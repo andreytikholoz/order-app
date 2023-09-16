@@ -1,7 +1,8 @@
 package com.company.orderapp.entity;
 
-import com.company.orderapp.OrderStatus;
+import com.company.orderapp.enums.OrderStatus;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "ORDER_ENTITY_T01")
 public class OrderEntity {
     @Id

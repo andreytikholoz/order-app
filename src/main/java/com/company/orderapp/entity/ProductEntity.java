@@ -1,6 +1,7 @@
 package com.company.orderapp.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,7 +11,8 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "GOODS_ENTITY_T01")
+@NoArgsConstructor
+@Table(name = "PRODUCTS_ENTITY_T01")
 public class ProductEntity {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -36,9 +38,4 @@ public class ProductEntity {
         this.price = price;
         this.quantity = quantity;
     }
-
-    public ProductEntity() {
-
-    }
-
 }

@@ -1,4 +1,4 @@
-package com.company.orderapp;
+package com.company.orderapp.enums;
 
 public enum OrderStatus {
     PAID,

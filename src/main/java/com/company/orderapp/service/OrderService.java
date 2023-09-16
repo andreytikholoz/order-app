@@ -1,16 +1,19 @@
 package com.company.orderapp.service;
 
-import com.company.orderapp.OrderStatus;
 import com.company.orderapp.entity.*;
+import com.company.orderapp.enums.OrderStatus;
 import com.company.orderapp.mapper.OrderMapper;
 import com.company.orderapp.repository.OrderRepository;
 import com.company.orderapp.repository.OrderedProductRepository;
 import com.company.orderapp.repository.ProductRepository;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 @Transactional
 @AllArgsConstructor
 public class OrderService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderSchedulerService.class);
 
     private OrderRepository orderRepository;
     private ProductRepository productRepository;
@@ -30,26 +34,40 @@ public class OrderService {
 
     public OrderDTO placeOrder(OrderDTO orderDTO) {
         checkIfOrderCanBePlaced(orderDTO);
+
+        LOGGER.info("Placing order with products: {}", orderDTO.getProductList());
+
         OrderEntity orderEntity = createOrderEntity(orderDTO);
         OrderEntity createdOrderEntity = orderRepository.save(orderEntity);
         List<OrderedProductEntity> createdOrderedProductEntityList = saveOrderedProducts(orderDTO, createdOrderEntity.getId());
+
+        LOGGER.info("Order placed successfully. Order ID: {}", createdOrderEntity.getId());
+
         return orderMapper.map(createdOrderEntity, createdOrderedProductEntityList);
     }
 
-    // mark orders as paid
+    // mark orders as paid, and before it check if products still in database
     public void markOrderAsPaid(String orderId) {
-        orderRepository.findById(UUID.fromString(orderId)).ifPresent(orderEntity -> {
-            orderEntity.setStatus(OrderStatus.PAID);
-            orderRepository.save(orderEntity);
-            removePaidProducts(orderId);
-        });
-    }
+        LOGGER.info("Marking order as paid. Order ID: {}", orderId);
 
-    // delete orders that have not been paid for within 10 minutes
-    public void deleteUnpaidOrders() {
-        LocalDateTime tenMinutesAgo = LocalDateTime.now().minusMinutes(10);
-        List<OrderEntity> unpaidOrders = orderRepository.findByStatusAndCreatedDateBefore(OrderStatus.UNPAID, tenMinutesAgo);
-        orderRepository.deleteAll(unpaidOrders);
+        List<OrderedProductEntity> orderedProductEntityList = orderedProductRepository
+                .findAllByOrderId(UUID.fromString(orderId));
+        orderedProductEntityList.forEach(orderedProductEntity -> {
+            UUID orderedProductId = orderedProductEntity.getProduct().getId();
+            ProductEntity productEntity = productRepository.findById(orderedProductId)
+                    .orElseThrow(() -> new NoSuchElementException("Product with id = [" + orderedProductId + "] not exist"));
+            if (productEntity.getQuantity() < orderedProductEntity.getQuantity()) {
+                throw new IllegalStateException("Products with id = [" + orderedProductId + "] less than you want to order");
+            }
+        });
+        OrderEntity orderEntity = orderRepository.findById(UUID.fromString(orderId))
+                .orElseThrow(() -> new EntityNotFoundException("Order with id " + orderId + " not found"));
+        orderEntity.setStatus(OrderStatus.PAID);
+        orderRepository.save(orderEntity);
+        removePaidProducts(orderId);
+
+        LOGGER.info("Order marked as paid. Order ID: {}", orderId);
+
     }
 
     private OrderEntity createOrderEntity(OrderDTO orderDTO) {
@@ -78,11 +96,11 @@ public class OrderService {
 
     //checks is it possible to place order by checking if products are in the database in the required quantity
     private void checkIfOrderCanBePlaced(OrderDTO orderDTO) {
-        orderDTO.getProductList().forEach(productDTO -> {
-            UUID orderedProductId = productDTO.getProductId();
+        orderDTO.getProductList().forEach(orderedProductDTO -> {
+            UUID orderedProductId = orderedProductDTO.getProductId();
             ProductEntity productEntity = productRepository.findById(orderedProductId)
-                    .orElseThrow(() -> new NoSuchElementException("Product with id = [" + orderedProductId + "] not exist"));
-            if (productEntity.getQuantity() < productDTO.getQuantity()) {
+                    .orElseThrow(() -> new EntityNotFoundException("Product with id = [" + orderedProductId + "] not exist"));
+            if (productEntity.getQuantity() < orderedProductDTO.getQuantity()) {
                 throw new IllegalStateException("Products with id = [" + orderedProductId + "] less than you want to order");
             }
         });

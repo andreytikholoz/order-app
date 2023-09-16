@@ -114,12 +114,8 @@
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/orderApi.yaml</inputSpec>
                             <generatorName>typescript-fetch-api</generatorName>
-                            <!--                            <modelNameSuffix>Dto</modelNameSuffix>-->
                             <output>${project.build.directory}/orderApi</output>
                             <configOptions>
-                                <!--                                <supportsES6>true</supportsES6>-->
-                                <!--                                <withInterfaces>withInterfaces</withInterfaces>-->
-                                <!--                                <generateModelTests>true</generateModelTests>-->
                                 <ngVersion>7.0.0</ngVersion>
                                 <npmName>@ua.department.employee/orderApi</npmName>
                                 <npmVersion>1.0.${maven.build.timestamp}</npmVersion>

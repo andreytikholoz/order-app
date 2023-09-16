@@ -4,6 +4,8 @@ import com.company.orderapp.api.ProductApi;
 import com.company.orderapp.entity.ProductDTO;
 import com.company.orderapp.entity.ProductListDTO;
 import com.company.orderapp.service.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,16 +13,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ProductController implements ProductApi {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
+
     @Autowired
     ProductService productService;
 
     @Override
     public ResponseEntity<ProductDTO> addProduct(ProductDTO productDTO) {
-        return ResponseEntity.ok(productService.addProduct(productDTO));
+        LOGGER.info("Received request to add product: {}", productDTO);
+        ProductDTO addedProduct = productService.addProduct(productDTO);
+        LOGGER.info("Product added successfully: {}", addedProduct);
+        return ResponseEntity.ok(addedProduct);
     }
 
     @Override
     public ResponseEntity<ProductListDTO> getProducts() {
-        return ResponseEntity.ok(productService.getProducts());
+        LOGGER.info("Received request to get products");
+        ProductListDTO productList = productService.getProducts();
+        LOGGER.info("Returning product list: {}", productList);
+        return ResponseEntity.ok(productList);
     }
 }
