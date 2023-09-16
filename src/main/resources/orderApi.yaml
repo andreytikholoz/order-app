@@ -1,0 +1,128 @@
+openapi: 3.0.1
+info:
+  title: Order Application API
+  version: 1.0.0
+  description: API for managing orders and products in an e-commerce application.
+
+paths:
+  /product:
+    post:
+      summary: Add a new product
+      operationId: addProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductDTO"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductDTO"
+    get:
+      summary: Get list of available products
+      operationId: getProducts
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListDTO'
+
+  /order:
+    post:
+      summary: Place a new order
+      operationId: placeOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderDTO'
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderDTO"
+
+  /order/pay:
+    patch:
+      summary: Mark an order as paid
+      operationId: markOrderAsPaid
+      parameters:
+        - in: query
+          name: id
+          description: ID of the order to mark as paid
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: "Successful operation"
+
+components:
+  schemas:
+    ProductDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+      required:
+        - name
+        - price
+        - quantity
+    ProductListDTO:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductDTO"
+    OrderDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        product_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderedProductDTO'
+        status:
+          type: object
+          format: enum
+        createdDate:
+          type: object
+          format: date
+        price:
+          type: number
+          format: double
+      required:
+        - product_list
+        - status
+        - createdDate
+        - price
+    OrderedProductDTO:
+      type: object
+      properties:
+        product_id:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+      required:
+        - product_id
+        - quantity
