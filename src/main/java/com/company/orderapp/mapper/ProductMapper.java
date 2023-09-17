@@ -6,12 +6,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProductMapper {
-    public ProductDTO map(ProductEntity goodsEntity) {
+    public ProductDTO map(ProductEntity productEntity) {
         ProductDTO productDTO = new ProductDTO();
-        productDTO.setId(goodsEntity.getId());
-        productDTO.setName(goodsEntity.getName());
-        productDTO.setPrice(goodsEntity.getPrice());
-        productDTO.setQuantity(goodsEntity.getQuantity());
+        productDTO.setId(productEntity.getId());
+        productDTO.setName(productEntity.getName());
+        productDTO.setPrice(productEntity.getPrice());
+        productDTO.setQuantity(productEntity.getQuantity());
         return productDTO;
     }
 }

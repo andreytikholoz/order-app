@@ -67,7 +67,6 @@ public class OrderService {
         removePaidProducts(orderId);
 
         LOGGER.info("Order marked as paid. Order ID: {}", orderId);
-
     }
 
     private OrderEntity createOrderEntity(OrderDTO orderDTO) {

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,6 +20,7 @@ public class ProductController implements ProductApi {
     ProductService productService;
 
     @Override
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     public ResponseEntity<ProductDTO> addProduct(ProductDTO productDTO) {
         LOGGER.info("Received request to add product: {}", productDTO);
         ProductDTO addedProduct = productService.addProduct(productDTO);
@@ -27,6 +29,7 @@ public class ProductController implements ProductApi {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_USER') OR hasRole('ROLE_MANAGER')")
     public ResponseEntity<ProductListDTO> getProducts() {
         LOGGER.info("Received request to get products");
         ProductListDTO productList = productService.getProducts();
