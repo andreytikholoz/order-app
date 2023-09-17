@@ -140,29 +140,22 @@
 				}
 			],
 			"request": {
-				"method": "PUT",
+				"method": "PATCH",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "localhost:8080/order/pay?id=dcbb0435-1418-46e4-b99a-3b3d3017a36e",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
+						"order",
+						"pay"
 					],
 					"query": [
 						{
 							"key": "id",
-							"value": "1"
+							"value": "dcbb0435-1418-46e4-b99a-3b3d3017a36e"
 						}
 					]
 				},

@@ -54,7 +54,6 @@ public class RequestFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(principal, "", authorities);
 
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            LOGGER.info("Successfully authenticated user");
         }
 
         filterChain.doFilter(request, response);

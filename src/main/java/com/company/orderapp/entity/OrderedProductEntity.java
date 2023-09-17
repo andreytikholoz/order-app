@@ -10,8 +10,6 @@ import java.util.UUID;
 
 @Data
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "ORDERED_PRODUCT_ENTITY_T01")
 public class OrderedProductEntity {
     @Id
