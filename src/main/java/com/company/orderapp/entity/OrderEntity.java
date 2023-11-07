@@ -2,7 +2,6 @@ package com.company.orderapp.entity;
 
 import com.company.orderapp.enums.OrderStatus;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
